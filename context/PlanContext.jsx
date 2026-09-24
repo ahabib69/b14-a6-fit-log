@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
 const Ctx = createContext(null)
+
 const KEY = 'fitlog-v1'
 const MAX_PLAN = 5
 
@@ -15,70 +16,108 @@ export function PlanProvider({ children }) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(KEY)
+
       if (saved) {
         const parsed = JSON.parse(saved)
-        setToday(parsed.today || [])
-        setLater(parsed.later || [])
+
+        setToday(Array.isArray(parsed.today) ? parsed.today : [])
+        setLater(Array.isArray(parsed.later) ? parsed.later : [])
       }
     } catch {
-      // ignore
+      setToday([])
+      setLater([])
     }
+
     setReady(true)
   }, [])
 
   useEffect(() => {
     if (!ready) return
-    localStorage.setItem(KEY, JSON.stringify({ today, later }))
+
+    try {
+      localStorage.setItem(
+        KEY,
+        JSON.stringify({
+          today,
+          later,
+        })
+      )
+    } catch {
+      // Ignore localStorage errors
+    }
   }, [today, later, ready])
 
   const flash = (text) => {
     setMsg(null)
-    // tiny delay so animation retriggers every time
+
     requestAnimationFrame(() => {
       setMsg(text)
-      setTimeout(() => setMsg(null), 2200)
+
+      setTimeout(() => {
+        setMsg(null)
+      }, 2200)
     })
   }
 
   const addToday = (item) => {
     setToday((prev) => {
-      if (prev.find((x) => x.id === item.id)) {
+      if (prev.some((x) => x.id === item.id)) {
         flash('Already added')
         return prev
       }
+
       if (prev.length >= MAX_PLAN) {
         flash('Max 5 workouts today')
         return prev
       }
+
       flash('Added to plan')
-      return [...prev, { ...item, done: false }]
+
+      return [
+        ...prev,
+        {
+          ...item,
+          done: false,
+        },
+      ]
     })
   }
 
   const addLater = (item) => {
     setLater((prev) => {
-      if (prev.find((x) => x.id === item.id)) {
+      if (prev.some((x) => x.id === item.id)) {
         flash('Already saved')
         return prev
       }
+
       flash('Saved for later')
+
       return [...prev, item]
     })
   }
 
   const remove = (id, from) => {
     if (from === 'today') {
-      setToday((p) => p.filter((x) => x.id !== id))
+      setToday((prev) => prev.filter((item) => item.id !== id))
     } else {
-      setLater((p) => p.filter((x) => x.id !== id))
+      setLater((prev) => prev.filter((item) => item.id !== id))
     }
+
     flash('Removed')
   }
 
   const toggleDone = (id) => {
-    setToday((p) =>
-      p.map((x) => (x.id === id ? { ...x, done: !x.done } : x))
+    setToday((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              done: !item.done,
+            }
+          : item
+      )
     )
+
     flash('Updated')
   }
 
@@ -102,7 +141,11 @@ export function PlanProvider({ children }) {
 }
 
 export function usePlan() {
-  const v = useContext(Ctx)
-  if (!v) throw new Error('wrap with PlanProvider first')
-  return v
+  const value = useContext(Ctx)
+
+  if (!value) {
+    throw new Error('usePlan must be used inside PlanProvider')
+  }
+
+  return value
 }
