@@ -5,7 +5,7 @@ export default function Footer() {
         <span className="font-display text-lg font-bold text-white">
           FIT<span className="text-accent">LOG</span>
         </span>
-        <p>© 2026 · Built for the assignment, but I actually use it</p>
+        <p>© 2026 FitLog — Workout Library. Train hard, log honest.</p>
       </div>
     </footer>
   )

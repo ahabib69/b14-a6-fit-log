@@ -46,17 +46,25 @@ export default function LibrarySection({ workouts }) {
 
           <label className="flex items-center gap-2 text-sm">
             Sort By
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-white outline-none"
-            >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+            <span className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="appearance-none rounded-full border border-border bg-surface py-1.5 pl-3 pr-8 text-sm text-white outline-none"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-white/50"
+              >
+                ▾
+              </span>
+            </span>
           </label>
         </div>
       </div>

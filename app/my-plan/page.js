@@ -25,7 +25,7 @@ export default function MyPlanPage() {
       <div className="flex min-h-[50vh] items-center justify-center">
         <div className="flex items-center gap-2 text-sm text-white/60">
           <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
-          Loading your plan...
+          Loading workouts…
         </div>
       </div>
     )
@@ -40,11 +40,11 @@ export default function MyPlanPage() {
         </p>
 
         <h1 className="mt-2 font-display text-3xl font-bold uppercase md:text-4xl">
-          My Plan
+          MY PLAN
         </h1>
 
         <p className="mt-2 text-sm leading-6 text-white/60">
-          Max 5 workouts for the day. Finish them, then add more if you want.
+          Cap of five lifts for today. Finish them, then load more.
         </p>
       </div>
 
@@ -71,7 +71,7 @@ export default function MyPlanPage() {
       {/* Tabs */}
       <div className="mt-8 flex gap-6 border-b border-border">
         {[
-          ['plan', `Today (${plan.length})`],
+          ['plan', `Today's Plan (${plan.length})`],
           ['saved', `Saved (${saved.length})`],
         ].map(([key, label]) => (
           <button
@@ -101,18 +101,18 @@ export default function MyPlanPage() {
             </div>
 
             <p className="mt-5 font-display text-xl font-bold uppercase">
-              Empty for now
+              NOTHING HERE YET
             </p>
 
             <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-white/50">
-              Go grab something from the workout library and build your plan.
+              Browse the library and add a lift to get today moving.
             </p>
 
             <Link
               href="/"
               className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 text-sm font-bold uppercase text-black transition hover:scale-[1.02] hover:opacity-90"
             >
-              Browse workouts
+              Go to workouts
             </Link>
           </div>
         ) : (
@@ -157,7 +157,7 @@ export default function MyPlanPage() {
                     href={`/workout/${item.id}`}
                     className="rounded-full border border-white/20 px-4 py-2 text-xs font-bold uppercase transition hover:border-accent hover:text-accent"
                   >
-                    Details
+                    View Details
                   </Link>
 
                   {view === 'plan' && (
@@ -165,7 +165,7 @@ export default function MyPlanPage() {
                       onClick={() => markDone(item.id)}
                       className="rounded-full bg-accent px-4 py-2 text-xs font-bold uppercase text-black transition hover:opacity-90"
                     >
-                      {item.done ? 'Undo' : '✓ Done'}
+                      {item.done ? 'Undo' : '✓ Mark as Done'}
                     </button>
                   )}
 

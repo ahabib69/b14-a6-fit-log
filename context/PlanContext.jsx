@@ -71,7 +71,7 @@ export function PlanProvider({ children }) {
         return prev
       }
 
-      flash('Added to plan')
+      flash("Added to today's plan")
 
       return [
         ...prev,
@@ -107,18 +107,19 @@ export function PlanProvider({ children }) {
   }
 
   const toggleDone = (id) => {
-    setToday((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              done: !item.done,
-            }
-          : item
-      )
-    )
+    setToday((prev) => {
+      const item = prev.find((entry) => entry.id === id)
+      flash(item?.done ? 'Marked as not done' : 'Marked as done')
 
-    flash('Updated')
+      return prev.map((entry) =>
+        entry.id === id
+          ? {
+              ...entry,
+              done: !entry.done,
+            }
+          : entry
+      )
+    })
   }
 
   return (

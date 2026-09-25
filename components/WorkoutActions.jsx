@@ -3,23 +3,32 @@
 import { usePlan } from '@/context/PlanContext'
 
 export default function WorkoutActions({ workout }) {
-  const { plan, addToPlan, saveForLater, removeItem } = usePlan()
+  const { plan, saved, addToPlan, saveForLater, removeItem, PLAN_CAP } = usePlan()
+  const alreadyInPlan = plan.some((item) => item.id === workout.id)
+  const alreadySaved = saved.some((item) => item.id === workout.id)
+  const planFull = plan.length >= PLAN_CAP
 
   return (
     <>
       <div className="mt-8 flex flex-wrap gap-3">
         <button
           onClick={() => addToPlan(workout)}
-          className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase text-black transition hover:scale-[1.02] hover:opacity-90"
+          disabled={alreadyInPlan || planFull}
+          className="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase text-black transition hover:scale-[1.02] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
         >
-          + Add to plan
+          + {alreadyInPlan
+            ? "Already in today's plan"
+            : planFull
+              ? 'Plan is full'
+              : "Add to today's plan"}
         </button>
 
         <button
           onClick={() => saveForLater(workout)}
-          className="rounded-full border border-white/40 px-6 py-3 text-sm font-bold uppercase text-white transition hover:border-accent hover:text-accent"
+          disabled={alreadySaved}
+          className="rounded-full border border-white/40 px-6 py-3 text-sm font-bold uppercase text-white transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
         >
-          ☆ Save for later
+          ☆ {alreadySaved ? 'Saved' : 'Save for later'}
         </button>
       </div>
 
@@ -31,12 +40,12 @@ export default function WorkoutActions({ workout }) {
                 Today's Plan
               </p>
               <p className="text-xs text-white/50">
-                {plan.length}/5 workouts added
+                {plan.length}/{PLAN_CAP} workouts added
               </p>
             </div>
 
             <span className="rounded-full bg-accent px-3 py-1 text-xs font-bold text-black">
-              {plan.length}/5
+              {plan.length}/{PLAN_CAP}
             </span>
           </div>
 
